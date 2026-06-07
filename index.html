@@ -48,14 +48,16 @@
                     }
             else if (isVK) {
                     try {
-                        let groupId = urlParams.get('vk_group_id');
-                
-                    if (!groupId) groupId = "239290737"; 
-
-                    await vkBridge.send('VKWebAppShare', {
-                        link: `https://vk.com/write-${groupId}`, 
-                        text: `Мои данные регистрации: ${dataString}`
-                    });
+                        const vkUserId = urlParams.get('vk_user_id');
+                        const groupId = urlParams.get('vk_group_id')
+                    await vkBridge.send('VKWebAppAllowMessagesFromGroup', {
+                group_id: parseInt(groupId)
+            });
+            await fetch('https://vash-sait.ru/api/vk-register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: vkUserId, data: results })
+            });
                 
                     vkBridge.send('VKWebAppClose', { status: 'success' });
             }
